@@ -1,0 +1,365 @@
+.tela-boas-vindas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #CEBAA1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3;
+}
+
+#botaoIniciar {
+  cursor: pointer;
+  width: 50%;
+}
+
+/* Fundo confete animado */
+.fundo-gif {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vh;
+  height: 100vh;
+  background-image: url('../img/confete.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  z-index: -1;
+}
+
+/* GIF de título atrás de tudo */
+.titulo-gif {
+  position: absolute;
+  top: -3%;
+  width: 100%;
+  height: 50%;
+  background-image: url('../img/titulo.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: -2;
+}
+
+/* Estilo geral */
+body {
+  font-family: Arial, sans-serif;
+  display: flex;
+  background-color: #CEBAA1;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  height: auto;
+  overflow-y: auto;
+}
+
+/* Container principal */
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 75%;
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+}
+
+/* Mensagem de feedback */
+#mensagem {
+  width: 100%;
+  margin-bottom: 15px;
+  font-weight: bold;
+  text-align: center;
+  color: white;
+  font-size: 30px;
+  transition: opacity 1s ease;
+  opacity: 1;
+  position: absolute;
+  top: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+#mensagem.ocultar {
+  opacity: 0;
+}
+
+/* Linha de senha */
+.linha-senha {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+  background-color: #BAA387;
+  border-radius: 50px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border: 5px solid #C8AC8A;
+  box-sizing: border-box;
+}
+
+/* Label */
+label {
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  margin-left: 15px;
+}
+
+/* Campo de entrada */
+input[type="text"] {
+  color: white;
+  flex: 1;
+  padding: 13px;
+  border: none;
+  border-radius: 20px;
+  font-size: 18px;
+  background-color: #BAA387;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border: none;
+}
+
+/* Botão */
+button {
+  width: 80px;
+  height: 45px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  z-index: 1;
+}
+
+button:active {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Campo de digitação */
+.campo-digitacao {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  min-width: 200px;
+  max-width: 100%;
+}
+
+/* Cursor animado */
+.cursor {
+  position: absolute;
+  left: 10px;
+  color: white;
+  font-size: 18px;
+  animation: piscar 1s infinite;
+  pointer-events: none;
+}
+
+@keyframes piscar {
+  0%, 50% {
+    opacity: 1;
+  }
+  50.01%, 100% {
+    opacity: 0;
+  }
+}
+
+/* Cadeados */
+.cadeados {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  transition: opacity 1s ease;
+  opacity: 1;
+}
+
+.cadeado {
+  width: 40px;
+  height: 40px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.cadeado.verde {
+  filter: hue-rotate(90deg);
+  transform: scale(1.1);
+}
+
+/* Área que contém os conteúdos das fases */
+.resposta-fase-container {
+  height: 350px;
+  margin-top: 30px;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Cada fase individual */
+.resposta-fase {
+  display: none;
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.img_fase_1 {
+  width: 400px;
+}
+
+.texto_fase_2 {
+  margin-top: 250px;
+  background-color: #BAA387;
+  border-radius: 50px;
+  border: 5px solid #C8AC8A;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 15px 10px;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+.pergunta_fase_2 {
+  background-color: #BAA387;
+  border-radius: 50px;
+  border: 5px solid #C8AC8A;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 15px 7px;
+  width: 100%;
+  max-width: 600px;
+  box-sizing: border-box;
+}
+
+.resposta-fase.fase_3 {
+  margin-top: -60px;
+  background-color: #BAA387;
+  border-radius: 50px;
+  border: 5px solid #C8AC8A;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 20px 10px;
+  width: 100%;
+  max-width: 60vh;
+  box-sizing: border-box;
+  text-align: center;
+  white-space: normal;
+  word-wrap: break-word;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.resposta-fase.fase_5 {
+  margin-top: -60px;
+  background-color: #BAA387;
+  border-radius: 50px;
+  border: 5px solid #C8AC8A;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  width: 100%;
+  max-width: 60vh;
+  box-sizing: border-box;
+  white-space: normal;
+  word-wrap: break-word;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.nokia{
+  position: absolute;
+  width: 300px;
+}
+
+.ligar{
+  position: absolute;
+  width: 143px;
+  height: 99px;
+  left: -75px;
+  top: 150px;
+  border-radius: 10%;
+}
+
+.mensagem_mamaco{
+  position: absolute;
+  top: 350px;
+  display: none; 
+  color: white; 
+  font-size: 20px; 
+  background-color: #C2A36E;
+  border-radius: 50px;
+  border: 5px solid #765B3E;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  padding: 15px 15px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.dica {
+  display: flex;
+  justify-content: center;
+  height: 400px;
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  transition: top 0.5s ease;
+}
+
+/* Posições personalizadas por fase */
+.fase-1 .dica{
+  top: 500px;
+}
+
+.fase-2 .dica{
+  top: 750px;
+}
+
+.fase-3 .dica {
+  top: 500px;
+}
+
+.fase-4 .dica {
+  top: 500px;
+}
+
+.fase-5 .dica {
+  top: 500px;
+}
+
+/* Animação suave de entrada */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+}
+
+#imagemAlfabeto{
+  display: none;
+  margin-top: 650px;
+  width: 350px;
+}
