@@ -212,6 +212,15 @@ document.addEventListener("visibilitychange", () => {
   }
 });
 
+function abrirInstagram() {
+    window.location.href = "instagram://user?username=ulongbugtong";
+
+    // Fallback para navegador após 2 segundos
+    setTimeout(() => {
+      window.location.href = "https://www.instagram.com/ulongbugtong?igsh=d3hoaHVmZDBjaGk3";
+    }, 2000);
+  }
+
 let mamacoEstado = 0;
 let mamacoEstado2 = 0;
 let mamacoEstado3 = 0;
