@@ -33,8 +33,16 @@ function verificarSenha() {
           if (faseAtual + 1 < 7) {
             musica.src = `./src/audio/music_fase_${faseAtual + 1}.mp3`;
           }
+
           musica.loop = true;
           musica.play();
+
+          // Aplica volume apenas para a fase 6
+          if (faseAtual + 1 === 6) {
+            musica.volume = 0.4;
+          } else {
+            musica.volume = 1.0; // volume normal para outras fases
+          }
         }
       };
     }
@@ -92,21 +100,6 @@ function verificarSenha() {
     }, 3000);
   }
 }
-
-const video = document.getElementById("video_parabens");
-
-// Ao clicar no vídeo, ele começa ou reinicia
-video.addEventListener("click", () => {
-  if (video.paused || video.ended) {
-    video.currentTime = 0;
-    video.play();
-  }
-});
-
-// Quando terminar, volta para o início e espera novo clique
-video.addEventListener("ended", () => {
-  video.currentTime = 0;
-});
 
 function mostrarConteudoFase(fase) {
   const todasAsFases = document.querySelectorAll(".resposta-fase");
@@ -394,5 +387,4 @@ document.querySelector(".nokia").addEventListener("click", () => {
       mensagem.style.display = "none";
     }
   }
-
 });
