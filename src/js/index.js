@@ -39,6 +39,9 @@ function verificarSenha() {
       };
     }
 
+    const audio = document.getElementById("music_fase6");
+    audio.volume = 0.8; // 80%
+
     faseAtual++;
 
     if (faseAtual < senhas.length) {
@@ -74,23 +77,23 @@ function verificarSenha() {
       }, 7000);
 
       mensagemTimeout = setTimeout(() => {
-      document.getElementById("video_parabens").style.display = "block";
-    }, 7500);
-  }
-} else {
-  mensagem.textContent = `Senha incorreta!`;
-  mensagem.style.color = "red";
+        document.getElementById("video_parabens").style.display = "block";
+      }, 7500);
+    }
+  } else {
+    mensagem.textContent = `Senha incorreta!`;
+    mensagem.style.color = "red";
 
-  const erroAudio = document.getElementById("erroAudio");
-  if (erroAudio) {
-    erroAudio.currentTime = 0;
-    erroAudio.play();
-  }
+    const erroAudio = document.getElementById("erroAudio");
+    if (erroAudio) {
+      erroAudio.currentTime = 0;
+      erroAudio.play();
+    }
 
-  mensagemTimeout = setTimeout(() => {
-    mensagem.style.opacity = "0";
-  }, 3000);
-}
+    mensagemTimeout = setTimeout(() => {
+      mensagem.style.opacity = "0";
+    }, 3000);
+  }
 }
 
 const video = document.getElementById("video_parabens");
