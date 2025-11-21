@@ -101,6 +101,21 @@ function verificarSenha() {
   }
 }
 
+const video = document.getElementById("video_parabens");
+
+// Ao clicar no vídeo, ele começa ou reinicia
+video.addEventListener("click", () => {
+  if (video.paused || video.ended) {
+    video.currentTime = 0;
+    video.play();
+  }
+});
+
+// Quando terminar, volta para o início e espera novo clique
+video.addEventListener("ended", () => {
+  video.currentTime = 0;
+});
+
 function mostrarConteudoFase(fase) {
   const todasAsFases = document.querySelectorAll(".resposta-fase");
   todasAsFases.forEach(div => (div.style.display = "none"));
