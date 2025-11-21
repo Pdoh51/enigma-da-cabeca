@@ -39,7 +39,7 @@ function verificarSenha() {
 
           // Aplica volume apenas para a fase 6
           if (faseAtual + 1 === 6) {
-            musica.volume = 0.4;
+            musica.volume = 0.3;
           } else {
             musica.volume = 1.0; // volume normal para outras fases
           }
@@ -402,4 +402,5 @@ document.querySelector(".nokia").addEventListener("click", () => {
       mensagem.style.display = "none";
     }
   }
+
 });
