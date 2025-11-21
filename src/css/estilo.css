@@ -257,7 +257,7 @@ button:active {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   padding: 20px 10px;
   width: 100%;
-  max-width: 50vh;
+  max-width: 40vh;
   box-sizing: border-box;
   text-align: center;
   white-space: normal;
@@ -372,4 +372,5 @@ button:active {
   margin-top: -130px;
   margin-left: 5%;
   cursor: pointer;
+
 }
