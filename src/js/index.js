@@ -402,5 +402,4 @@ document.querySelector(".nokia").addEventListener("click", () => {
       mensagem.style.display = "none";
     }
   }
-
 });
