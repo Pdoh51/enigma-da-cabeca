@@ -39,9 +39,6 @@ function verificarSenha() {
       };
     }
 
-    const audio = document.getElementById("music_fase6");
-    audio.volume = 0.8; // 80%
-
     faseAtual++;
 
     if (faseAtual < senhas.length) {
@@ -397,4 +394,5 @@ document.querySelector(".nokia").addEventListener("click", () => {
       mensagem.style.display = "none";
     }
   }
+
 });
