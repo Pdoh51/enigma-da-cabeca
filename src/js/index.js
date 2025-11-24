@@ -213,13 +213,13 @@ document.addEventListener("visibilitychange", () => {
 });
 
 function abrirInstagram() {
-    window.location.href = "instagram://user?username=ulongbugtong";
+  window.location.href = "instagram://user?username=ulongbugtong";
 
-    // Fallback para navegador após 2 segundos
-    setTimeout(() => {
-      window.location.href = "https://www.instagram.com/ulongbugtong?igsh=d3hoaHVmZDBjaGk3";
-    }, 2000);
-  }
+  // Fallback para navegador após 2 segundos
+  setTimeout(() => {
+    window.location.href = "https://www.instagram.com/ulongbugtong?igsh=d3hoaHVmZDBjaGk3";
+  }, 2000);
+}
 
 let mamacoEstado = 0;
 let mamacoEstado2 = 0;
@@ -380,7 +380,9 @@ document.querySelector(".nokia").addEventListener("click", () => {
       mamacoEstado3 += 1;
     } else if (mamacoEstado3 === 10) {
       digitarMensagem("Opa! chegou aí né? Agora eu acho que da pra fazer de boa. Aliás essa foi a última dica tá, depois disso só vou repetir.", "mensagemMamaco");
-      document.getElementById("imagemAlfabeto").style.display = "block";
+      document.getElementById("imagemAlfabeto1").style.display = "block";
+      document.getElementById("imagemAlfabeto2").style.display = "block";
+      document.getElementById("imagemAlfabeto3").style.display = "block";
       mamacoEstado3 += 1;
     } else {
       imagemMamaco.src = "./src/img/nokia.gif";
@@ -388,13 +390,44 @@ document.querySelector(".nokia").addEventListener("click", () => {
       mamacoEstado3 = 0;
     }
   } else if (faseAtual === 3) {
+    document.getElementById("mensagemMamaco").classList.add("mensagem-fase4");
+    document.getElementById("imagemAlfabeto1").style.display = "none";
+    document.getElementById("imagemAlfabeto2").style.display = "none";
+    document.getElementById("imagemAlfabeto3").style.display = "none";
     if (mamacoEstado4 === 0) {
       imagemMamaco.src = "./src/img/mamaco.gif";
-      document.getElementById("imagemAlfabeto").style.display = "none";
-      digitarMensagem("4", "mensagemMamaco");
+      digitarMensagem("Hm? Quem ligar pra mamaco da dica? Alô? Hmmmm, mamaco da dica sair. Pegar mais Banana. Golira da ajuda dar dica.", "mensagemMamaco");
       mamacoEstado4 += 1;
     } else if (mamacoEstado4 === 1) {
-      digitarMensagem("Hmmmmm deixa eu pensar aqui numa dica pra você.", "mensagemMamaco");
+      digitarMensagem("Hmmmmm, mim não entender porra nenhuma, mim não enxergar nada, luz pouca, Golira precisa de mais luz! Não ter luz, não enxergar nada, adeus.", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 2) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 3) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Hm? Mais dica? Mamaco da Dica ainda não voltar. Mim não gostar de dica, Golira ajuda, não dica. Mas Golira tenta.", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 4) {
+      digitarMensagem("Hmmmmmm.. Sim... sim... Golira vê... Precisa de ajuda???? Mim ajuda... Golira sentiu... GOLIRA SABE!! SIMM!! GOLIRA SENTE!! ENIGMA GOSTAR DE ROCK!!!!", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 5) {
+      digitarMensagem("U U U U U U U AAAAH AAAAH AAAAH!!!", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 6) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 7) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("O QUE? MAIS DICA?", "mensagemMamaco"); 
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 8) {
+      digitarMensagem("MIM JÁ DIZER! GOLIRA AJUDA! NÃO GOLIRA DICA!!!", "mensagemMamaco"); 
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 9) {
+      digitarMensagem("Última dica de Golira da ajuda.. Ordem das criaturas importar, sem ordem das criaturas, sem resposta do enigma... ADEUS!!!", "mensagemMamaco");
       mamacoEstado4 += 1;
     } else {
       imagemMamaco.src = "./src/img/nokia.gif";
@@ -404,7 +437,7 @@ document.querySelector(".nokia").addEventListener("click", () => {
   } else if (faseAtual === 4) {
     if (mamacoEstado5 === 0) {
       imagemMamaco.src = "./src/img/mamaco.gif";
-      digitarMensagem("Aí já tá de sacanagem, não faço ideia de como resolver, não tão me pagando bananas o suficiente pra tudo isso de ligação, nunca vi um mamaco tão burro quanto eu, pode falar pra eles que eu me demito, thau!", "mensagemMamaco");
+      digitarMensagem("Aí já tá de sacanagem, não faço ideia de como resolver, não tão me pagando bananas o suficiente pra tudo isso de ligação, nunca vi um mamaco tão burro quanto eu, pode falar pra eles que eu me demito, THAU!!!", "mensagemMamaco");
       mamacoEstado5 += 1;
     } else {
       imagemMamaco.style.display = "none";

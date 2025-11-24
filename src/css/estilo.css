@@ -333,6 +333,11 @@ a,.insta{
   max-width: 300px;
 }
 
+.mensagem-fase4 {
+  border: 5px solid #33210e;
+  background-color: #C2A36E;
+}
+
 .dica {
   display: flex;
   justify-content: center;
@@ -377,9 +382,21 @@ a,.insta{
 
 }
 
-#imagemAlfabeto{
+#imagemAlfabeto1{
   display: none;
-  margin-top: 650px;
+  margin-top: 550px;
+  width: 350px;
+}
+
+#imagemAlfabeto2{
+  display: none;
+  margin-top: 10px;
+  width: 350px;
+}
+
+#imagemAlfabeto3{
+  display: none;
+  margin-top: 10px;
   width: 350px;
 }
 
