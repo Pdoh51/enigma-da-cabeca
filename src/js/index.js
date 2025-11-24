@@ -1,4 +1,10 @@
-const senhas = ["1", "1", "1", "1", "1"];
+const senhas = [
+  "236,75", 
+  "24305500", 
+  "O que o ovo novo disse pro ovo velho? Cancan", 
+  "SANGUE", 
+  ""
+];
 let faseAtual = 0;
 let mensagemTimeout = null;
 
@@ -11,7 +17,7 @@ function verificarSenha() {
   mensagem.classList.remove("ocultar");
   mensagem.style.opacity = "1";
 
-  if (senhaDigitada === senhas[faseAtual]) {
+  if (faseAtual === 4 || senhaDigitada === senhas[faseAtual]) {
     const cadeado = document.getElementById(`cadeado${faseAtual}`);
     cadeado.src = "./src/img/cadeado_aberto.png";
     cadeado.classList.add("verde");
@@ -41,7 +47,7 @@ function verificarSenha() {
           if (faseAtual + 1 === 6) {
             musica.volume = 0.3;
           } else {
-            musica.volume = 1.0; // volume normal para outras fases
+            musica.volume = 1.0;
           }
         }
       };
@@ -73,7 +79,6 @@ function verificarSenha() {
         mensagem.style.opacity = "0";
         cadeadosContainer.style.opacity = "0";
 
-        // Esconde a dica e o conteúdo das fases
         const dica = document.querySelector(".dica");
         const respostaContainer = document.querySelector(".resposta-fase-container");
 
@@ -85,20 +90,20 @@ function verificarSenha() {
         document.getElementById("video_parabens").style.display = "block";
       }, 7500);
     }
-  } else {
-    mensagem.textContent = `Senha incorreta!`;
-    mensagem.style.color = "red";
+} else {
+  mensagem.textContent = `Senha incorreta!`;
+  mensagem.style.color = "red";
 
-    const erroAudio = document.getElementById("erroAudio");
-    if (erroAudio) {
-      erroAudio.currentTime = 0;
-      erroAudio.play();
-    }
-
-    mensagemTimeout = setTimeout(() => {
-      mensagem.style.opacity = "0";
-    }, 3000);
+  const erroAudio = document.getElementById("erroAudio");
+  if (erroAudio) {
+    erroAudio.currentTime = 0;
+    erroAudio.play();
   }
+
+  mensagemTimeout = setTimeout(() => {
+    mensagem.style.opacity = "0";
+  }, 3000);
+}
 }
 
 const video = document.getElementById("video_parabens");
@@ -421,10 +426,10 @@ document.querySelector(".nokia").addEventListener("click", () => {
       mamacoEstado4 += 1;
     } else if (mamacoEstado4 === 7) {
       imagemMamaco.src = "./src/img/mamaco.gif";
-      digitarMensagem("O QUE? MAIS DICA?", "mensagemMamaco"); 
+      digitarMensagem("O QUE? MAIS DICA?", "mensagemMamaco");
       mamacoEstado4 += 1;
     } else if (mamacoEstado4 === 8) {
-      digitarMensagem("MIM JÁ DIZER! GOLIRA AJUDA! NÃO GOLIRA DICA!!!", "mensagemMamaco"); 
+      digitarMensagem("MIM JÁ DIZER! GOLIRA AJUDA! NÃO GOLIRA DICA!!!", "mensagemMamaco");
       mamacoEstado4 += 1;
     } else if (mamacoEstado4 === 9) {
       digitarMensagem("Última dica de Golira da ajuda.. Ordem das criaturas importar, sem ordem das criaturas, sem resposta do enigma... ADEUS!!!", "mensagemMamaco");
