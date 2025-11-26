@@ -409,3 +409,13 @@ a,.insta{
   margin-left: 5%;
   cursor: pointer;
 }
+
+.recompensa_final{
+  display: none;
+  position: absolute;
+  top: 100%;
+  width: 400px;
+  height: 400px;
+  background-image: url('../img/recompensa_final.gif');
+  background-size: cover;
+}

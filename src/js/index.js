@@ -1,8 +1,8 @@
 const senhas = [
-  "236,75", 
-  "24305500", 
-  "O que o ovo novo disse pro ovo velho? Cancan", 
-  "SANGUE", 
+  "236,75",
+  "24305500",
+  "O que o ovo novo disse pro ovo velho? Cancan",
+  "SANGUE",
   ""
 ];
 let faseAtual = 0;
@@ -88,22 +88,23 @@ function verificarSenha() {
 
       mensagemTimeout = setTimeout(() => {
         document.getElementById("video_parabens").style.display = "block";
+        document.querySelector(".recompensa_final").style.display = "block";
       }, 7500);
     }
-} else {
-  mensagem.textContent = `Senha incorreta!`;
-  mensagem.style.color = "red";
+  } else {
+    mensagem.textContent = `Senha incorreta!`;
+    mensagem.style.color = "red";
 
-  const erroAudio = document.getElementById("erroAudio");
-  if (erroAudio) {
-    erroAudio.currentTime = 0;
-    erroAudio.play();
+    const erroAudio = document.getElementById("erroAudio");
+    if (erroAudio) {
+      erroAudio.currentTime = 0;
+      erroAudio.play();
+    }
+
+    mensagemTimeout = setTimeout(() => {
+      mensagem.style.opacity = "0";
+    }, 3000);
   }
-
-  mensagemTimeout = setTimeout(() => {
-    mensagem.style.opacity = "0";
-  }, 3000);
-}
 }
 
 const video = document.getElementById("video_parabens");
