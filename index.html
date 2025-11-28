@@ -2,90 +2,142 @@
 <html lang="pt-br">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Enigma da Cabeça</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 
-    <link rel="stylesheet" href="./src/css/estilo.css" />
-    <link rel="stylesheet" href="./src/css/responsivo.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cris2</title>
+
+    <link rel="stylesheet" href="./src/css/estilo.css">
 </head>
 
 <body>
-    <div class="fundo-gif"></div>
-
-    <div class="titulo-gif"></div>
-
-    <div class="recompensa_final"></div>
-
-    <form action="">
-        <div class="container">
-            <!-- TOPO FIXO: mensagem + linha-senha + cadeados -->
-            <div class="topo-fixo">
-                <p id="mensagem"></p>
-
-                <div class="linha-senha">
-                    <label for="senha">Senha:</label>
-                    <div class="campo-digitacao">
-                        <span class="cursor" id="cursor">|</span>
-                        <input id="senha" type="text" onfocus="esconderCursor()" onblur="mostrarCursor()" autofocus />
-                    </div>
-                    <button class="enviar" type="button" onclick="verificarSenha()">Enviar</button>
-                </div>
-
-                <div class="cadeados" id="cadeados">
-                    <img src="./src/img/cadeado_fechado.png" class="cadeado" id="cadeado0" />
-                    <img src="./src/img/cadeado_fechado.png" class="cadeado" id="cadeado1" />
-                    <img src="./src/img/cadeado_fechado.png" class="cadeado" id="cadeado2" />
-                    <img src="./src/img/cadeado_fechado.png" class="cadeado" id="cadeado3" />
-                    <img src="./src/img/cadeado_fechado.png" class="cadeado" id="cadeado4" />
-                </div>
-            </div>
-
-            <!-- RESPOSTAS DAS FASES -->
-            <div class="resposta-fase-container">
-                <div class="resposta-fase fase_1" style="display: block;">
-                    <img class="img_fase_1" src="./src/img/fase_1.jpeg" alt="Imagem da fase 1" />
-                </div>
-                <div class="resposta-fase fase_2">
-                    <p class="texto_fase_2">mu ier atsiuqnoc sotnauq soirótirret merfo soirássecen arap raçnacla a aus
-                        airolg amixám, aus aicnêtsisrep é etnemos amu oãçarf ad edatnov alep oãçulove, sues sotief oãt
-                        soirádnel oãs sodatnoc éta omsem solep sióreh siam sodamalca que arortuo áj marof sodatsiuqnoc.
-                    </p>
-                    <p class="pergunta_fase_2">lauq o etimil ad airolg?</p>
-                    <p class="pergunta_fase_2">otnauq oniert é oirássecen arap riulove?</p>
-                    <p class="pergunta_fase_2">odnauq so soriemirp sióreh es mavruc ao ier?</p>
-                </div>
-                <div class="resposta-fase fase_3">
-                    0100111100100000011100010111010101100101001000000110111100100000011011110111011001101111040156157166157040144151163163145040160162157206F766F2076656C686F3F2043616E63616E
-                </div>
-                <div class="resposta-fase fase_4">
-                    <button class="insta" onclick="abrirInstagram()">UlongBugtong</button>
-                </div>
-                <div class="resposta-fase fase_5">Kjm lpz v qdyv z dbpvg ph hvxvmmaj?</div>
-            </div>
-
-            <div class="dica">
-                <img class="nokia" src="./src/img/nokia.gif" alt="">
-                <p class="mensagem_mamaco" id="mensagemMamaco">
-                    Fala meu gorilão! como que vc vai? tá precisando de uma ajuda nos enigmas?
-                </p>
-            </div>
-            <img id="imagemAlfabeto1" src="./src/img/alfabeto_nerd1.jpeg" alt="Alfabeto Nerd" />
-            <img id="imagemAlfabeto2" src="./src/img/alfabeto_nerd2.jpeg" alt="Alfabeto Nerd" />
-            <img id="imagemAlfabeto3" src="./src/img/alfabeto_nerd3.jpeg" alt="Alfabeto Nerd" />
-        </div>
-
-        <video id="video_parabens" src="./src/video/parabens.mp4" preload="auto"></video>
-
-    </form>
-
-    <div id="telaBoasVindas" class="tela-boas-vindas">
-        <img src="./src/img/inicio.gif" id="botaoIniciar" />
+    <!-- Menu inicial -->
+    <div class="menu menu_principal ativo">
+        <button class="botao criar_arquivo">Criar novo arquivo</button>
+        <div class="lista lista_arquivos"></div>
     </div>
 
-    <audio id="erroAudio" src="./src/audio/erro.mp3"></audio>
-    <audio id="acertoAudio" src="./src/audio/acerto.mp3"></audio>
-    <audio id="musicaFase" src="./src/audio/music_fase_1.mp3" autoplay loop></audio>
+    <!-- Tela de edição -->
+    <div class="editor editor_principal oculto">
+        <form class="formulario_edicao" action="">
+            <label for="Nome">Nome:</label>
+            <input class="digitacao" type="text" name="Nome" id="Nome"><br>
+            <br>
+
+            <label for="upload">Imagem:</label>
+            <input class="upload" type="file" id="upload" accept="image/*">
+
+            <div class="preview">
+                <img class="preview_img" src="">
+            </div>
+
+            <div id="crop-modal" class="modal">
+                <div class="modal-content">
+                    <h2>Imagem</h2>
+                    <img id="modal-img" src="">
+                    <button id="confirmar" type="button">Confirmar</button>
+                    <button id="cancelar" type="button">Escolher outra imagem</button>
+                </div>
+            </div>
+
+            <div id="result"></div>
+
+            <label for="Elemento">Elemento:</label>
+            <button id="Elemento" class="botao_lista" data-target=".lista_elemento" type="button">Elemento</button><br>
+            <div class="lista lista_elemento">
+                <button type="button">Sangue</button>
+                <button type="button">Morte</button>
+                <button type="button">Conhecimento</button>
+                <button type="button">Energia</button>
+                <button type="button">Medo</button>
+                <button type="button">Varia</button>
+            </div>
+            <br>
+
+            <label for="Circulo">Circulo:</label>
+            <button id="Circulo" class="botao_lista" data-target=".lista_circulo" type="button">Circulo</button><br>
+            <div class="lista lista_circulo">
+                <button type="button">1° Circulo (1 PE)</button>
+                <button type="button">2° Circulo (3 PE)</button>
+                <button type="button">3° Circulo (6 PE)</button>
+                <button type="button">4° Circulo (10 PE)</button>
+            </div>
+            <br>
+
+            <label for="Execucao">Execução:</label>
+            <button id="Execucao" class="botao_lista" data-target=".lista_execucao" type="button">Execução</button><br>
+            <div class="lista lista_execucao">
+                <button type="button">Padrão</button>
+                <button type="button">Movimento</button>
+                <button type="button">Completa</button>
+                <button type="button">Reação</button>
+                <button type="button">Livre</button>
+            </div>
+            <br>
+
+            <label for="Alcance">Alcance:</label>
+            <button id="Alcance" class="botao_lista" data-target=".lista_alcance" type="button">Alcance</button><br>
+            <div class="lista lista_alcance">
+                <button type="button">Pessoal</button>
+                <button type="button">Toque</button>
+                <button type="button">Curto (9m)</button>
+                <button type="button">Médio (18m)</button>
+                <button type="button">Longo (36m)</button>
+                <button type="button">Extremo (90m)</button>
+                <button type="button">Ilimitado</button>
+            </div>
+            <br>
+
+            <label for="Area">Área:</label>
+            <input class="digitacao" type="text" name="Área" id="Area"><br>
+            <br>
+
+            <label for="Alvo">Alvo:</label>
+            <input class="digitacao" type="text" name="Alvo" id="Alvo"><br>
+            <br>
+
+            <label for="Duracao">Duração:</label>
+            <input class="digitacao" type="text" name="Duração" id="Duracao"><br>
+            <br>
+
+            <label for="Efeito">Efeito:</label>
+            <input class="digitacao" type="text" name="Efeito" id="Efeito"><br>
+            <br>
+
+            <label for="Resistencia">Resistência:</label>
+            <input class="digitacao" type="text" name="Resistência" id="Resistencia"><br>
+            <br>
+
+            <label for="Dados">Dados:</label>
+            <input class="digitacao" type="text" name="Dados" id="Dados"><br>
+            <br>
+
+            <label for="Descricao">Descrição:</label><br>
+            <textarea class="digitacao" name="Descrição" id="Descricao" rows="4" cols="40"></textarea><br>
+            <br>
+
+            <label for="DadosDiscente">Dados Discente:</label>
+            <input class="digitacao" type="text" name="DadosDiscente" id="DadosDiscente"><br>
+            <br>
+
+            <label for="DescricaoDiscente">Descrição Discente:</label><br>
+            <textarea class="digitacao" name="DescriçãoDiscente" id="DescricaoDiscente" rows="4"
+                cols="40"></textarea><br>
+            <br>
+
+            <label for="DadosVerdadeiro">Dados Verdadeiro:</label>
+            <input class="digitacao" type="text" name="DadosVerdadeiro" id="DadosVerdadeiro"><br>
+            <br>
+
+            <label for="DescricaoVerdadeiro">Descrição Verdadeiro:</label><br>
+            <textarea class="digitacao" name="DescriçãoVerdadeiro" id="DescricaoVerdadeiro" rows="4"
+                cols="40"></textarea>
+
+            <button type="button" class="botao voltar_menu">Voltar ao menu</button>
+        </form>
+    </div>
 
     <script src="./src/js/index.js"></script>
 </body>
