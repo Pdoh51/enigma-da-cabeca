@@ -1,184 +1,453 @@
-// Seletores principais
-const upload = document.querySelector('.upload');       // input de arquivo
-const preview = document.querySelector('.preview');     // área de preview clicável
-const previewImg = document.querySelector('.preview_img'); // imagem do preview
-const modal = document.getElementById('crop-modal');    // modal de corte
-const modalImg = document.getElementById('modal-img');  // imagem dentro da modal
-const confirmar = document.getElementById('confirmar'); // botão confirmar
-const cancelar = document.getElementById('cancelar');   // botão cancelar
-const result = document.getElementById('result');       // área para mostrar resultado
-let cropper;                                            // instância do Cropper
+const senhas = [
+  "236,75",
+  "24305500",
+  "O que o ovo novo disse pro ovo velho? Cancan",
+  "SANGUE",
+  ""
+];
+let faseAtual = 0;
+let mensagemTimeout = null;
 
-// Abrir seletor ao clicar no preview
-preview.addEventListener('click', () => upload.click());
+function verificarSenha() {
+  const senhaDigitada = document.getElementById("senha").value;
+  const mensagem = document.getElementById("mensagem");
+  const cadeadosContainer = document.getElementById("cadeados");
 
-// Quando o usuário escolhe uma imagem
-upload.addEventListener('change', function () {
-    const file = this.files[0];
-    if (!file) return;
+  clearTimeout(mensagemTimeout);
+  mensagem.classList.remove("ocultar");
+  mensagem.style.opacity = "1";
 
-    const reader = new FileReader();
-    reader.onload = e => {
-        modalImg.src = e.target.result;
+  if (faseAtual === 4 || senhaDigitada === senhas[faseAtual]) {
+    const cadeado = document.getElementById(`cadeado${faseAtual}`);
+    cadeado.src = "./src/img/cadeado_aberto.png";
+    cadeado.classList.add("verde");
 
-        // Espera a imagem carregar antes de iniciar o Cropper
-        modalImg.onload = () => {
-            modal.style.display = 'flex';       // abre modal
-            if (cropper) cropper.destroy();     // limpa instância anterior
-            cropper = new Cropper(modalImg, {
-                aspectRatio: 1,       // corte quadrado fixo
-                viewMode: 2,          // impede que o corte ultrapasse a imagem
-                autoCrop: true,
-                movable: true,        // permite mover o quadrado
-                zoomable: true,       // permite aumentar/diminuir
-                scalable: false,      // não distorce
-                rotatable: false,     // não gira
-                background: false,    // remove fundo quadriculado
-                guides: true,         // mostra linhas de guia
-                highlight: true,      // destaca área de corte
-                cropBoxResizable: true, // permite redimensionar o quadrado
-                cropBoxMovable: true    // permite mover o quadrado
-            });
-        };
-    };
-    reader.readAsDataURL(file);
-});
+    const acertoAudio = document.getElementById("acertoAudio");
+    const musica = document.getElementById("musicaFase");
 
-// Confirmar corte
-confirmar.addEventListener('click', () => {
-    if (!cropper) return;
+    if (musica) {
+      musica.pause();
+      musica.currentTime = 0;
+    }
 
-    const canvas = cropper.getCroppedCanvas();
-    if (!canvas) return;
+    if (acertoAudio) {
+      acertoAudio.currentTime = 0;
+      acertoAudio.play();
 
-    
-    // Atualiza apenas o preview principal com o recorte
-    previewImg.src = canvas.toDataURL('image/jpeg', 0.9);
+      acertoAudio.onended = () => {
+        if (musica) {
+          if (faseAtual + 1 < 7) {
+            musica.src = `./src/audio/music_fase_${faseAtual + 1}.mp3`;
+          }
 
-    // Fecha modal e destrói instância
-    modal.style.display = 'none';
-    cropper.destroy();
-    cropper = null;
-    upload.value = ''; // limpa o input para permitir reescolher a mesma imagem
-});
+          musica.loop = true;
+          musica.play();
 
-// Cancelar e escolher outra imagem
-cancelar.addEventListener('click', () => {
-    modal.style.display = 'none'; // fecha modal
-    upload.value = '';            // limpa input
-    upload.click();               // reabre seletor
-});
-
-
-//------------------------------------------------------------------------------
-
-const botoesPrincipais = document.querySelectorAll('.botao_lista');
-
-botoesPrincipais.forEach(botaoPrincipal => {
-    const targetSelector = botaoPrincipal.dataset.target;
-    const lista = document.querySelector(targetSelector);
-    const botoesLista = lista.querySelectorAll('button');
-
-    // Mostra/esconde a lista ao clicar no botão principal
-    botaoPrincipal.addEventListener('click', () => {
-        if (lista.style.display === 'none' || lista.style.display === '') {
-            lista.style.display = 'flex';
-        } else {
-            lista.style.display = 'none';
+          // Aplica volume apenas para a fase 6
+          if (faseAtual + 1 === 6) {
+            musica.volume = 0.3;
+          } else {
+            musica.volume = 1.0;
+          }
         }
-    });
+      };
+    }
 
-    // Ação ao clicar em cada botão da lista
-    botoesLista.forEach(botao => {
-        botao.addEventListener('click', () => {
-            console.log("Você escolheu:", botao.textContent);
-            botaoPrincipal.textContent = botao.textContent;
-            lista.style.display = 'none'; // fecha a lista depois da escolha
-        });
-    });
-});
+    faseAtual++;
 
-//--------------------------------------------------------------------------------------------------------------------
+    if (faseAtual < senhas.length) {
+      mensagem.textContent = `Senha correta!`;
+      mensagem.style.color = "green";
+      document.getElementById("senha").value = "";
+      mostrarCursor();
+      mostrarConteudoFase(faseAtual + 1);
+      atualizarFaseVisual(faseAtual + 1);
 
-const criarArquivoBtn = document.querySelector('.criar_arquivo');
-const listaArquivos = document.querySelector('.lista_arquivos');
-const menu = document.querySelector('.menu_principal');
-const editor = document.querySelector('.editor_principal');
-const voltarBtn = document.querySelector('.voltar_menu');
+      mensagemTimeout = setTimeout(() => {
+        mensagem.style.opacity = "0";
+      }, 3000);
+    } else {
+      mensagem.textContent = "Você completou o desafio!";
+      mensagem.style.color = "green";
+      document.querySelector(".linha-senha").style.display = "none";
+      document.querySelector(".dica").style.display = "none";
+      document.querySelector(".resposta-fase-container").style.display = "none";
+      mensagem.style.marginTop = "120px";
+      cadeadosContainer.style.marginTop = "140px";
 
-let arquivos = [];
-let arquivoAtual = null;
+      mensagemTimeout = setTimeout(() => {
+        mensagem.style.opacity = "0";
+        cadeadosContainer.style.opacity = "0";
 
-// Criar novo arquivo
-criarArquivoBtn.addEventListener('click', () => {
-    const novoArquivo = {
-        id: Date.now(),
-        nome: 'Arquivo vazio*',
-        dados: {}
-    };
+        const dica = document.querySelector(".dica");
+        const respostaContainer = document.querySelector(".resposta-fase-container");
 
-    arquivos.push(novoArquivo);
-    renderizarArquivos();
-});
+        if (dica) dica.style.display = "none";
+        if (respostaContainer) respostaContainer.style.display = "none";
+      }, 7000);
 
-// Renderizar lista de arquivos
-function renderizarArquivos() {
-    listaArquivos.innerHTML = '';
+      mensagemTimeout = setTimeout(() => {
+        document.getElementById("video_parabens").style.display = "block";
+        document.querySelector(".recompensa_final").style.display = "block";
+      }, 7500);
+    }
+  } else {
+    mensagem.textContent = `Senha incorreta!`;
+    mensagem.style.color = "red";
 
-    arquivos.forEach(arquivo => {
-        const card = document.createElement('div');
-        card.className = 'arquivo_card';
+    const erroAudio = document.getElementById("erroAudio");
+    if (erroAudio) {
+      erroAudio.currentTime = 0;
+      erroAudio.play();
+    }
 
-        card.innerHTML = `
-            <span>${arquivo.nome}</span>
-            <button class="abrir_btn" data-id="${arquivo.id}">Abrir</button>
-        `;
-
-        listaArquivos.appendChild(card);
-    });
-
-    // botão abrir
-    document.querySelectorAll('.abrir_btn').forEach(botao => {
-        botao.onclick = () => abrirArquivo(botao.dataset.id);
-    });
+    mensagemTimeout = setTimeout(() => {
+      mensagem.style.opacity = "0";
+    }, 3000);
+  }
 }
 
-// Abrir arquivo
-function abrirArquivo(id) {
-    arquivoAtual = arquivos.find(a => a.id == id);
-    if (!arquivoAtual) return;
+const video = document.getElementById("video_parabens");
 
-    menu.classList.remove('ativo');
-    menu.classList.add('oculto');
-    editor.classList.remove('oculto');
-    editor.classList.add('ativo');
+// Ao clicar no vídeo, ele começa ou reinicia
+video.addEventListener("click", () => {
+  if (video.paused || video.ended) {
+    video.currentTime = 0;
+    video.play();
+  }
+});
 
+// Quando terminar, volta para o início e espera novo clique
+video.addEventListener("ended", () => {
+  video.currentTime = 0;
+});
+
+function mostrarConteudoFase(fase) {
+  const todasAsFases = document.querySelectorAll(".resposta-fase");
+  todasAsFases.forEach(div => (div.style.display = "none"));
+
+  const ativa = document.querySelector(`.fase_${fase}`);
+  if (ativa) {
+    ativa.style.display = "block";
+  }
 }
 
-// Capturar digitação apenas uma vez
-document.querySelectorAll('.digitacao').forEach(campo => {
-    campo.addEventListener('input', e => {
-        if (arquivoAtual) {
-            arquivoAtual.dados[e.target.id] = e.target.value;
+function atualizarFaseVisual(fase) {
+  const container = document.querySelector(".container");
+  container.classList.remove("fase-1", "fase-2", "fase-3", "fase-4", "fase-5");
+  container.classList.add(`fase-${fase}`);
+}
 
-            // Atualiza o nome do arquivo no menu quando o campo Nome muda
-            if (e.target.id === 'Nome') {
-                arquivoAtual.nome = e.target.value.trim() || 'Arquivo vazio*';
-            }
+function esconderCursor() {
+  document.getElementById("cursor").style.display = "none";
+}
 
-        }
+function mostrarCursor() {
+  const senha = document.getElementById("senha").value;
+  const cursor = document.getElementById("cursor");
+  cursor.style.display = senha === "" ? "inline" : "none";
+}
+
+document.getElementById("senha").addEventListener("keydown", function (event) {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    verificarSenha();
+  }
+});
+
+window.onload = function () {
+  document.getElementById("senha").focus();
+  mostrarConteudoFase(1);
+  atualizarFaseVisual(1);
+};
+
+// Inicia música ao clicar em "Abrir presente"
+document.getElementById("botaoIniciar").addEventListener("click", () => {
+  const musica = document.getElementById("musicaFase");
+  const tela = document.getElementById("telaBoasVindas");
+
+  if (musica) {
+    musica.currentTime = 0;
+    musica.loop = true;
+    musica.play();
+  }
+
+  tela.style.display = "none";
+});
+
+// Para a música ao sair ou recarregar a página
+window.addEventListener("beforeunload", () => {
+  const musica = document.getElementById("musicaFase");
+  if (musica) {
+    musica.pause();
+    musica.currentTime = 0;
+  }
+});
+
+document.addEventListener("visibilitychange", () => {
+  const musica = document.getElementById("musicaFase");
+  if (document.hidden && musica) {
+    musica.pause();
+    musica.currentTime = 0;
+  } else if (!document.hidden && musica && musica.paused) {
+    musica.play().catch(() => {
+      document.body.addEventListener("click", () => musica.play(), { once: true });
     });
+  }
 });
 
-// Voltar ao menu
-voltarBtn.addEventListener('click', () => {
-    editor.classList.remove('ativo');
-    editor.classList.add('oculto');
-    menu.classList.remove('oculto');
-    menu.classList.add('ativo');
-
-    renderizarArquivos();
+// Reinicia a música se o usuário voltar para a aba
+document.addEventListener("visibilitychange", () => {
+  const musica = document.getElementById("musicaFase");
+  if (!document.hidden && musica && musica.paused) {
+    musica.play().catch(() => {
+      document.body.addEventListener("click", () => musica.play(), { once: true });
+    });
+  }
 });
 
-//---------------------------------------------------------------------------------------
+// ... outras funções como verificarSenha, mostrarConteudoFase, etc.
 
+// Reinicia a música se o usuário voltar para a aba
+document.addEventListener("visibilitychange", () => {
+  const musica = document.getElementById("musicaFase");
+  if (!document.hidden && musica && musica.paused) {
+    musica.play().catch(() => {
+      document.body.addEventListener("click", () => musica.play(), { once: true });
+    });
+  }
+});
+
+function abrirInstagram() {
+  window.location.href = "instagram://user?username=ulongbugtong";
+
+  // Fallback para navegador após 2 segundos
+  setTimeout(() => {
+    window.location.href = "https://www.instagram.com/ulongbugtong?igsh=d3hoaHVmZDBjaGk3";
+  }, 2000);
+}
+
+let mamacoEstado = 0;
+let mamacoEstado2 = 0;
+let mamacoEstado3 = 0;
+let mamacoEstado4 = 0;
+let mamacoEstado5 = 0;
+let intervaloDigitacao = null;
+let textoCompleto = "";
+let pulando = false;
+
+// Função para digitar texto como em jogo de diálogo
+function digitarMensagem(texto, elementoId, velocidade = 40) {
+  const elemento = document.getElementById(elementoId);
+  elemento.textContent = "";
+  elemento.style.display = "block";
+
+  textoCompleto = texto;
+  pulando = false;
+  let i = 0;
+
+  clearInterval(intervaloDigitacao);
+  intervaloDigitacao = setInterval(() => {
+    if (pulando) {
+      elemento.textContent = textoCompleto;
+      clearInterval(intervaloDigitacao);
+      return;
+    }
+
+    if (i < texto.length) {
+      elemento.textContent += texto.charAt(i);
+      i++;
+    } else {
+      clearInterval(intervaloDigitacao);
+    }
+  }, velocidade);
+}
+
+// Permite pular a digitação ao clicar na mensagem
+document.getElementById("mensagemMamaco").addEventListener("click", () => {
+  pulando = true;
+
+  // Simula o clique no Nokia
+  document.querySelector(".nokia").click();
+});
+
+document.querySelector(".nokia").addEventListener("click", () => {
+  const imagemMamaco = document.querySelector(".nokia");
+  const mensagem = document.getElementById("mensagemMamaco");
+
+  if (faseAtual === 0) {
+    if (mamacoEstado === 0) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Fala meu gorilão! Como que vai? tá precisando de uma ajuda nos enigmas aí?", "mensagemMamaco");
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 1) {
+      digitarMensagem("Hmmmmm deixa eu pensar aqui numa dica aqui pra você.", "mensagemMamaco");
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 2) {
+      digitarMensagem("Já sei! A resposta é um número, essa aí é difícil de pensar em, boa sorte aí.", "mensagemMamaco");
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 3) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 4) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Opa, tá querendo outra dica? Beleza, deixa eu pensar aqui hmmmmmm...", "mensagemMamaco");
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 5) {
+      digitarMensagem("Que tal essa, a senha é um número quebrado, com essa aí com certeza você acerta.", "mensagemMamaco");
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 6) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 7) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Oloco, tá querendo mais uma dica? Se sabe que é pra você fazer e não eu né? Mas tudo bem, deixa eu pensar aqui em outra dica hmmmmmm...", "mensagemMamaco");
+      mamacoEstado += 1;
+    } else if (mamacoEstado === 8) {
+      digitarMensagem("O enigma é um labirinto e num labirinto você não fica parando, só vai direto pra saída e no final vé a resposta, entendeu? Se não aí o mamaco não sou só eu aqui, mas confio em você pra isso. Se for querer outra dica só vou ficar repetindo as mesmas coisas, quem tem que achar a resposta é tu não eu, boa sorte.", "mensagemMamaco");
+      mamacoEstado += 1;
+    } else {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado = 0;
+    }
+  } else if (faseAtual === 1) {
+    if (mamacoEstado2 === 0) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Fala gorilão! Tô vendo aqui que você conseguiu passar de fase, meus parabéns sabia que você iria conseguir.", "mensagemMamaco");
+      mamacoEstado2 += 1;
+    } else if (mamacoEstado2 === 1) {
+      digitarMensagem("Tá querendo uma dica agora né? Deixa eu pensar aqui hmmmm...", "mensagemMamaco");
+      mamacoEstado2 += 1;
+    } else if (mamacoEstado2 === 2) {
+      digitarMensagem("A resposta da fase é a resposta das 3 perguntas tudo junto, sem espaço.", "mensagemMamaco");
+      mamacoEstado2 += 1;
+    } else if (mamacoEstado2 === 3) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado2 += 1;
+    } else if (mamacoEstado2 === 4) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Já quer outra dica? Beleza, deixa eu pensar hmmmmmm...", "mensagemMamaco");
+      mamacoEstado2 += 1;
+    } else if (mamacoEstado2 === 5) {
+      digitarMensagem("Presta atenção na música e no contexto do texto, as respostas vão estar na origem desses 2.", "mensagemMamaco");
+      mamacoEstado2 += 1;
+    } else if (mamacoEstado2 === 6) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado2 += 1;
+    } else if (mamacoEstado2 === 7) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Última dica em. As respostas são todas números e se você não percebeu ainda, as respostas estão no Clash Royale. Se tá difícil vai reclamar com quem fez essa merda.", "mensagemMamaco");
+      mamacoEstado2 += 1;
+    } else {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado2 = 0;
+    }
+  } else if (faseAtual === 2) {
+    if (mamacoEstado3 === 0) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Fala golira! Parabéns pela última em, mas agora se tá fudidu essa tá em nerdes.", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 1) {
+      digitarMensagem("Esse é complicado, deixa eu pensar numa dica aqui hmmmm...", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 2) {
+      digitarMensagem("Essa aí pelo que me falaram a resposta é só traduzir esse texto e mandar ele inteiro.", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 3) {
+      digitarMensagem(".............. hmmmmmmm ..............", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 4) {
+      digitarMensagem("Pediram aqui também pra você não usar gpt ou pesquisar pra traduzir, se não mamaco não ganha banana e nerd que fez esse enigma fica triste, mas confio que você não vai fazer isso, né?", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 5) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 6) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Nerdes é difícil né? Mas eu te ajudo, deixa eu pensar aqui hmmmmm...", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 7) {
+      digitarMensagem("Nesse texto tem alguns espaços de escrita, pra separar palavras e tals, eles são 00100000, 040 e 20, aí tu tenta resolver alguma coisa com isso.", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 8) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 9) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Os orangotangos da sabedoria aqui perceberam que é meio complicado traduzir isso aí sem pesquisar. O que você não fez né? Bom, não importa muito, se você tá me ligando de novo não deve ter pesquisado, então eles me mandaram te entregar uma coisa aqui, deve chegar daqui a pouco...", "mensagemMamaco");
+      mamacoEstado3 += 1;
+    } else if (mamacoEstado3 === 10) {
+      digitarMensagem("Opa! chegou aí né? Agora eu acho que da pra fazer de boa. Aliás essa foi a última dica tá, depois disso só vou repetir.", "mensagemMamaco");
+      document.getElementById("imagemAlfabeto1").style.display = "block";
+      document.getElementById("imagemAlfabeto2").style.display = "block";
+      document.getElementById("imagemAlfabeto3").style.display = "block";
+      mamacoEstado3 += 1;
+    } else {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado3 = 0;
+    }
+  } else if (faseAtual === 3) {
+    document.getElementById("mensagemMamaco").classList.add("mensagem-fase4");
+    document.getElementById("imagemAlfabeto1").style.display = "none";
+    document.getElementById("imagemAlfabeto2").style.display = "none";
+    document.getElementById("imagemAlfabeto3").style.display = "none";
+    if (mamacoEstado4 === 0) {
+      imagemMamaco.src = "./src/img/gorila.gif";
+      digitarMensagem("Hm? Quem ligar pra mamaco da dica? Alô? Hmmmm, mamaco da dica sair. Pegar mais Banana. Golira da ajuda dar dica.", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 1) {
+      digitarMensagem("Hmmmmm, mim não entender porra nenhuma, mim não enxergar nada, luz pouca, Golira precisa de mais luz! Não ter luz, não enxergar nada, adeus.", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 2) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 3) {
+      imagemMamaco.src = "./src/img/gorila.gif";
+      digitarMensagem("Hm? Mais dica? Mamaco da Dica ainda não voltar. Mim não gostar de dica, Golira ajuda, não dica. Mas Golira tenta.", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 4) {
+      digitarMensagem("Hmmmmmm.. Sim... sim... Golira vê... Precisa de ajuda???? Mim ajuda... Golira sentiu... GOLIRA SABE!! SIMM!! GOLIRA SENTE!! ENIGMA GOSTAR DE ROCK!!!!", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 5) {
+      digitarMensagem("U U U U U U U AAAAH AAAAH AAAAH!!!", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 6) {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 7) {
+      imagemMamaco.src = "./src/img/gorila.gif";
+      digitarMensagem("O QUE? MAIS DICA?", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 8) {
+      digitarMensagem("MIM JÁ DIZER! GOLIRA AJUDA! NÃO GOLIRA DICA!!!", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else if (mamacoEstado4 === 9) {
+      digitarMensagem("Última dica de Golira da ajuda.. Ordem das criaturas importar, sem ordem das criaturas, sem resposta do enigma... ADEUS!!!", "mensagemMamaco");
+      mamacoEstado4 += 1;
+    } else {
+      imagemMamaco.src = "./src/img/nokia.gif";
+      mensagem.style.display = "none";
+      mamacoEstado4 = 0;
+    }
+  } else if (faseAtual === 4) {
+    if (mamacoEstado5 === 0) {
+      imagemMamaco.src = "./src/img/mamaco.gif";
+      digitarMensagem("Aí já tá de sacanagem, não faço ideia de como resolver, não tão me pagando bananas o suficiente pra tudo isso de ligação, nunca vi um mamaco tão burro quanto eu, pode falar pra eles que eu me demito, THAU!!!", "mensagemMamaco");
+      mamacoEstado5 += 1;
+    } else {
+      imagemMamaco.style.display = "none";
+      mensagem.style.display = "none";
+    }
+  }
+});
